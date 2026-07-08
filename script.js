@@ -1,10 +1,3 @@
-//portfolio/
-//│── index.html
-//│── style.css
-//│── script.js
-//│── jeff.png          <-- Rename your uploaded photo to this
-//│── Jeff_Resume.pdf   <-- Your resume PDF
-
 
 
 // JEFF IMPERIAL PORTFOLIO SCRIPT
