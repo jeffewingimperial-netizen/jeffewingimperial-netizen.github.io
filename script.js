@@ -6,7 +6,7 @@ portfolio/
 │── Jeff_Resume.pdf   <-- Your resume PDF
 
 
-// ===============================
+
 // JEFF IMPERIAL PORTFOLIO SCRIPT
 // ===============================
 
