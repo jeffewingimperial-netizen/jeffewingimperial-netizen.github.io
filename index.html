@@ -1,200 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Ilustration Website</title>
 
 <style>
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
+/* CSS HERE */
 
-/* NAVBAR */
-.navbar {
-    background-color: #006241;
-    color: white;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    margin-left: 15px;
-}
-
-/* HERO */
-.hero {
-    height: 500px;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                url('housedada.png');
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-}
-
-/* SECTION */
-.section {
-    padding: 50px;
-    text-align: center;
-}
-
-/* CAROUSEL */
-.carousel {
-    width: 900px;
-    margin: auto;
-    overflow: hidden;
-    position: relative;
-}
-
-.carousel-track {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-}
-
-/* 3 visible */
-.slide {
-    min-width: 300px;
-    text-align: center;
-}
-
-.slide img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-/* BUTTONS */
-.prev, .next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 50%;
-}
-
-.prev { left: 10px; }
-.next { right: 10px; }
-
-/* FOOTER */
-.footer {
-    background: #006241;
-    color: white;
-    text-align: center;
-    padding: 20px;
+body{
+    font-family:Arial;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="navbar">
-    <h2>rrabbi_</h2>
-</div>
+<h1>Hello Jeff</h1>
 
-<div class="hero">
-    <h1>My Illustration 🎨</h1>
-</div>
-
-<div class="section">
-    <h2>My drawings</h2>
-
-    <div class="carousel">
-
-        <button class="prev">&#10094;</button>
-
-        <div class="carousel-track">
-
-            <!-- CLONES (last 3) -->
-            <div class="slide"><img src="shesheep.png"><p>MySheep</p></div>
-            <div class="slide"><img src="shepokemon.png"><p>MyPokemon</p></div>
-            <div class="slide"><img src="lavender.png"><p>Lavender</p></div>
-            <div class="slide"><img src="shechi.png"><p>MyWhitetitbird</p></div>
-            
-
-            <!-- REAL SLIDES -->
-            <div class="slide"><img src="shesheep.png"><p>Milkyway</p></div>
-            <div class="slide"><img src="shepokemon.png><p>Whitelily</p></div>
-            <div class="slide"><img src="lavender.png"><p>Lavender</p></div>
-            <div class="slide"><img src="shechi.png"><p>MyWhitetitbird</p></div>
-            <div class="slide"><img src="shewolf.png"><p>MyWolfGirl</p></div>
-            <div class="slide"><img src="makeup.png"><p>TomatoMakeup</p></div>
-                
-
-            <!-- CLONES (first 3) -->
-            <div class="slide"><img src="shesheep.png"><p>Milkyway</p></div>
-            <div class="slide"><img src="shepokemon.png"><p>Whitelily</p></div>
-            <div class="slide"><img src="lavender.png"><p>Mocha</p></div>
-
-        </div>
-
-        <button class="next">&#10095;</button>
-
-    </div>
-</div>
-
-<div class="footer">
-    © 2026 rrabbi illustration
-</div>
+<button onclick="sayHello()">
+Click Me
+</button>
 
 <script>
-const track = document.querySelector('.carousel-track');
-const slides = document.querySelectorAll('.slide');
 
-const slideWidth = 300;
-let index = 3; // start at real first slide
-
-// INITIAL POSITION
-track.style.transform = `translateX(-${index * slideWidth}px)`;
-
-// MOVE FUNCTION
-function moveSlide() {
-    track.style.transition = "transform 0.5s ease-in-out";
-    track.style.transform = `translateX(-${index * slideWidth}px)`;
+function sayHello(){
+    alert("Welcome!");
 }
-
-// NEXT
-document.querySelector('.next').addEventListener('click', () => {
-    index++;
-    moveSlide();
-});
-
-// PREV
-document.querySelector('.prev').addEventListener('click', () => {
-    index--;
-    moveSlide();
-});
-
-// LOOP FIX
-track.addEventListener('transitionend', () => {
-    if (index >= slides.length - 3) {
-        track.style.transition = "none";
-        index = 3;
-        track.style.transform = `translateX(-${index * slideWidth}px)`;
-    }
-
-    if (index <= 0) {
-        track.style.transition = "none";
-        index = slides.length - 6;
-        track.style.transform = `translateX(-${index * slideWidth}px)`;
-    }
-});
-
-// AUTO SLIDE
-setInterval(() => {
-    index++;
-    moveSlide();
-}, 3000);
 
 </script>
 
