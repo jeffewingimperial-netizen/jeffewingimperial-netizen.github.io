@@ -95,6 +95,67 @@
     object-fit: cover;
     border: 2px solid var(--rule);
     flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .profile-pic:hover, .profile-pic:focus-visible {
+    transform: scale(1.05);
+    border-color: var(--pass);
+  }
+
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 15, 20, 0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+
+  .lightbox.open {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .lightbox img {
+    max-width: min(90vw, 420px);
+    max-height: 80vh;
+    border-radius: 14px;
+    border: 2px solid var(--rule);
+    animation: zoomIn 0.25s ease;
+  }
+
+  @keyframes zoomIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 22px;
+    right: 26px;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .lightbox-close:hover, .lightbox-close:focus-visible {
+    border-color: var(--pass);
+    color: var(--pass);
   }
 
   .prompt {
@@ -265,12 +326,12 @@
   }
 
   .company-logo {
-    width: 28px;
-    height: 28px;
+    width: 44px;
+    height: 44px;
     object-fit: contain;
-    border-radius: 5px;
+    border-radius: 6px;
     background: var(--panel-2);
-    padding: 3px;
+    padding: 4px;
     flex-shrink: 0;
   }
 
@@ -375,7 +436,7 @@
     <div class="terminal-body">
       <div class="prompt"><span>$</span> whoami</div>
       <div class="profile-row">
-        <img src="jeff.jpg" alt="Jeff Ewing A. Imperial" class="profile-pic" id="profile">
+        <img src="profile.jpg" alt="Jeff Ewing A. Imperial" class="profile-pic" id="profile">
         <div>
           <h1>Jeff Ewing A. Imperial</h1>
           <div class="role-line" id="typing"><span class="cursor">&nbsp;</span></div>
@@ -405,7 +466,7 @@
   <div class="test-case current">
     <div class="test-case-head">
       <div class="test-case-title">
-        <img src="Tcap.jpeg" alt="Transcosmos logo" class="company-logo">
+        <img src="transcosmos-logo.png" alt="Transcosmos logo" class="company-logo">
         <h3>Software Test Engineer</h3>
       </div>
       <span class="status">● running</span>
@@ -425,7 +486,7 @@
   <div class="test-case">
     <div class="test-case-head">
       <div class="test-case-title">
-        <img src="Finastra.webp" alt="Finastra logo" class="company-logo">
+        <img src="finastra-logo.png" alt="Finastra logo" class="company-logo">
         <h3>Automation Quality Engineer</h3>
       </div>
       <span class="status">✓ passed</span>
@@ -443,7 +504,7 @@
   <div class="test-case">
     <div class="test-case-head">
       <div class="test-case-title">
-        <img src="Accenture.png" alt="Accenture logo" class="company-logo">
+        <img src="accenture-logo.png" alt="Accenture logo" class="company-logo">
         <h3>Quality Assurance Engineer</h3>
       </div>
       <span class="status">✓ passed</span>
@@ -460,7 +521,7 @@
   <div class="section-label">describe('Education')</div>
 
   <div class="edu-card">
-    <img src="sti.webp" alt="STI College logo" class="edu-logo">
+    <img src="sti-logo.png" alt="STI College logo" class="edu-logo">
     <div>
       <h3>Bachelor of Science in Computer Science</h3>
       <div class="school">STI College Novaliches</div>
@@ -472,6 +533,11 @@
     <div class="muted-line">Ran in 6y 0mo · 2018 – Present</div>
   </div>
 
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">✕ Close</button>
+  <img src="profile.jpg" alt="Jeff Ewing A. Imperial — zoomed" id="lightboxImg">
 </div>
 
 <script>
@@ -568,8 +634,30 @@ skillGroups.forEach((group, i) => {
 });
 
 // ===============================
-// Copy email on click
+// Profile picture zoom lightbox
 // ===============================
+const profilePic = document.getElementById("profile");
+const lightbox = document.getElementById("lightbox");
+const lightboxClose = document.getElementById("lightboxClose");
+
+function openLightbox() {
+    lightbox.classList.add("open");
+}
+function closeLightbox() {
+    lightbox.classList.remove("open");
+}
+
+if (profilePic) {
+    profilePic.addEventListener("click", openLightbox);
+}
+lightboxClose.addEventListener("click", closeLightbox);
+lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox(); // click outside image closes it
+});
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLightbox();
+});
+
 const copyBtn = document.getElementById("copyEmail");
 if (copyBtn) {
     copyBtn.addEventListener("click", (e) => {
