@@ -81,6 +81,22 @@
     padding: 28px 26px 30px;
   }
 
+  .profile-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 4px;
+  }
+
+  .profile-pic {
+    width: 76px;
+    height: 76px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--rule);
+    flex-shrink: 0;
+  }
+
   .prompt {
     color: var(--pass);
     font-size: 0.85rem;
@@ -242,6 +258,56 @@
     margin-bottom: 6px;
   }
 
+  .test-case-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .company-logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 5px;
+    background: var(--panel-2);
+    padding: 3px;
+    flex-shrink: 0;
+  }
+
+  /* EDUCATION */
+  .edu-card {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--muted);
+    border-radius: 6px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .edu-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: var(--panel-2);
+    padding: 4px;
+    flex-shrink: 0;
+  }
+
+  .edu-card h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.98rem;
+    margin: 0 0 3px;
+    color: var(--text);
+  }
+
+  .edu-card .school {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
   .test-case-head .status {
     font-family: 'JetBrains Mono', monospace;
     color: var(--pass);
@@ -308,8 +374,13 @@
     </div>
     <div class="terminal-body">
       <div class="prompt"><span>$</span> whoami</div>
-      <h1>Jeff Ewing A. Imperial</h1>
-      <div class="role-line" id="typing"><span class="cursor">&nbsp;</span></div>
+      <div class="profile-row">
+        <img src="profile.jpg" alt="Jeff Ewing A. Imperial" class="profile-pic" id="profile">
+        <div>
+          <h1>Jeff Ewing A. Imperial</h1>
+          <div class="role-line" id="typing"><span class="cursor">&nbsp;</span></div>
+        </div>
+      </div>
 
       <div class="contact">
         <span>📍 Quezon City</span>
@@ -333,7 +404,10 @@
 
   <div class="test-case current">
     <div class="test-case-head">
-      <h3>Software Test Engineer</h3>
+      <div class="test-case-title">
+        <img src="transcosmos-logo.png" alt="Transcosmos logo" class="company-logo">
+        <h3>Software Test Engineer</h3>
+      </div>
       <span class="status">● running</span>
     </div>
     <div class="company">Transcosmos Asia Philippines</div>
@@ -350,7 +424,10 @@
 
   <div class="test-case">
     <div class="test-case-head">
-      <h3>Automation Quality Engineer</h3>
+      <div class="test-case-title">
+        <img src="finastra-logo.png" alt="Finastra logo" class="company-logo">
+        <h3>Automation Quality Engineer</h3>
+      </div>
       <span class="status">✓ passed</span>
     </div>
     <div class="company">Finastra</div>
@@ -365,7 +442,10 @@
 
   <div class="test-case">
     <div class="test-case-head">
-      <h3>Quality Assurance Engineer</h3>
+      <div class="test-case-title">
+        <img src="accenture-logo.png" alt="Accenture logo" class="company-logo">
+        <h3>Quality Assurance Engineer</h3>
+      </div>
       <span class="status">✓ passed</span>
     </div>
     <div class="company">Accenture Inc.</div>
@@ -375,6 +455,16 @@
       <li>Created detailed test cases using HP ALM, user stories, scope, and limitations</li>
       <li>Evaluated and replicated issues with clear severity classification (Low, Medium, High)</li>
     </ul>
+  </div>
+
+  <div class="section-label">describe('Education')</div>
+
+  <div class="edu-card">
+    <img src="sti-logo.png" alt="STI College logo" class="edu-logo">
+    <div>
+      <h3>Bachelor of Science in Computer Science</h3>
+      <div class="school">STI College Novaliches</div>
+    </div>
   </div>
 
   <div class="suite-summary">
@@ -439,7 +529,9 @@ const skillGroups = [
     { name: "Browser Developer Tools", items: ["Font inspection", "Screen resolution verification"] },
     { name: "Design & Documentation", items: ["Figma", "Microsoft Excel", "Microsoft Word", "PDF"] },
     { name: "Recording Tools", items: ["TechSmith", "Screenpal", "Wholepage"] },
-    { name: "Other Automation Extensions", items: ["Axiom", "Test Case Studio (Selenium)"] }
+    { name: "Other Automation Extensions", items: ["Axiom", "Test Case Studio (Selenium)"] },
+    { name: "AI-Assisted Testing", items: ["Using AI to generate test cases", "AI-assisted bug analysis & triage", "Prompt-driven test script drafting", "AI-powered exploratory testing support"] },
+    { name: "AI-Assisted Development", items: ["Built this interactive resume site using AI-assisted coding", "HTML, CSS & JavaScript prototyping with AI pair-programming", "Rapid portfolio & internal tool prototyping using AI code generation", "Debugging and refining AI-generated code for production use"] }
 ];
 
 const skillsContainer = document.getElementById("skills");
