@@ -89,8 +89,8 @@
   }
 
   .profile-pic {
-    width: 130px;
-    height: 130px;
+    width: 150px;
+    height: 150px;
     border-radius: 14px;
     object-fit: cover;
     border: 2px solid var(--rule);
@@ -197,6 +197,29 @@
     gap: 14px;
     font-size: 0.85rem;
     color: var(--muted);
+    align-items: center;
+  }
+
+  .download-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    background: var(--panel-2);
+    color: var(--pass);
+    border: 1px solid var(--pass);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+
+  .download-btn:hover, .download-btn:focus-visible {
+    background: var(--pass);
+    color: var(--bg);
+    transform: translateY(-1px);
   }
 
   .contact a { color: var(--text); text-decoration: none; }
@@ -437,6 +460,18 @@
     margin-top: 4px;
   }
 
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
 </style>
 </head>
 
@@ -447,7 +482,7 @@
   <div class="terminal">
     <div class="terminal-bar">
       <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-      <span class="filename">jeff.jpg</span>
+      <span class="filename">Jeff Ewing A. Imperial — Resume</span>
     </div>
     <div class="terminal-body">
       <div class="prompt"><span>$</span> whoami</div>
@@ -464,6 +499,7 @@
         <a href="mailto:Jeffewing.imperial@gmail.com" id="copyEmail">📧 Jeffewing.imperial@gmail.com</a>
         <span>📞 0966-722-7598</span>
         <a href="https://www.linkedin.com/in/jeff-imperial-415462185" target="_blank" rel="noopener">💼 LinkedIn</a>
+        <a href="#" class="download-btn" id="downloadResume">⬇ Download Resume</a>
       </div>
 
       <div class="summary">
@@ -674,6 +710,37 @@ lightbox.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeLightbox();
 });
+
+// ===============================
+// Download Resume
+// ===============================
+const downloadBtn = document.getElementById("downloadResume");
+if (downloadBtn) {
+    downloadBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const link = document.createElement("a");
+        link.href = "Jeff_Resume.pdf";
+        link.download = "Jeff_Imperial_Resume.pdf";
+        link.click();
+    });
+}
+
+// ===============================
+// Scroll reveal for sections
+// ===============================
+const revealTargets = document.querySelectorAll(".section-label, #skills .describe, .test-case, .edu-card, .suite-summary");
+revealTargets.forEach(el => el.classList.add("reveal"));
+
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            revealObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.15 });
+
+revealTargets.forEach(el => revealObserver.observe(el));
 
 const copyBtn = document.getElementById("copyEmail");
 if (copyBtn) {
