@@ -649,7 +649,7 @@ const skillGroups = [
     { name: "Design & Documentation", items: ["Figma", "Microsoft Excel", "Microsoft Word", "PDF"] },
     { name: "Recording Tools", items: ["TechSmith", "Screenpal", "Wholepage"] },
     { name: "Other Automation Extensions", items: ["Axiom", "Test Case Studio (Selenium)"] },
-    { name: "AI-Assisted Testing", items: ["Using AI to generate test cases", "AI-assisted bug analysis & triage", "Prompt-driven test script drafting", "AI-powered exploratory testing support"] },
+    { name: "AI-Assisted Testing", items: ["Using AI to generate test cases", "AI-assisted bug analysis", "Prompt-driven test script drafting", "AI-powered exploratory testing support"] },
     { name: "AI-Assisted Development", items: ["Built this interactive resume site using AI-assisted coding", "HTML, CSS & JavaScript prototyping with AI pair-programming", "Rapid portfolio & internal tool prototyping using AI code generation", "Debugging and refining AI-generated code for production use"] }
 ];
 
@@ -720,7 +720,7 @@ if (downloadBtn) {
         e.preventDefault();
         const link = document.createElement("a");
         link.href = "Jeff_Resume.pdf";
-        link.download = "Jeff_Imperial_Resume.pdf";
+        link.download = "Jeff_Imperial_Resume.docx";
         link.click();
     });
 }
