@@ -851,16 +851,6 @@
   <img src="jeff.jpg" alt="Jeff Ewing A. Imperial — zoomed" id="lightboxImg">
 </div>
 
-<div class="floating-stats" id="floatingStats">
-  <div class="stat-row">
-    <span class="stat-dot"></span>
-    <span><span class="stat-value" id="activeViewers">1</span> viewing now</span>
-  </div>
-  <div class="stat-row">
-    <span>📊</span>
-    <span><span class="stat-value" id="totalViews">—</span> total views</span>
-  </div>
-</div>
 
 <button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">↑ Back to Top</button>
 
@@ -1060,59 +1050,6 @@ if (copyBtn) {
     });
 }
 
-// ===============================
-// Live view stats (total views + currently viewing)
-// Uses a free, no-signup counter API. "Currently viewing" is a
-// best-effort approximation (increments on load, decrements on
-// exit) since a static site has no real backend to track live
-// sessions precisely.
-// ===============================
-(function () {
-    const API = "https://countapi.mileshilliard.com/api/v1";
-    const TOTAL_KEY = "jeffewing_imperial_qa_portfolio_total_views";
-    const ACTIVE_KEY = "jeffewing_imperial_qa_portfolio_active_viewers";
-
-    const totalEl = document.getElementById("totalViews");
-    const activeEl = document.getElementById("activeViewers");
-    let joined = false;
-
-    // Total views: atomic +1 on every page load
-    fetch(`${API}/hit/${TOTAL_KEY}`)
-        .then(res => res.json())
-        .then(data => { if (totalEl) totalEl.textContent = data.value; })
-        .catch(() => { if (totalEl) totalEl.textContent = "—"; });
-
-    // Currently viewing: read current count, add 1, self-heal if it
-    // ever drifts to an unrealistic number (e.g. missed decrements).
-    fetch(`${API}/get/${ACTIVE_KEY}`)
-        .then(res => res.json())
-        .then(data => {
-            let current = parseInt(data.value, 10);
-            if (isNaN(current) || current < 0 || current > 50) current = 0;
-            const next = current + 1;
-            return fetch(`${API}/set/${ACTIVE_KEY}?value=${next}`).then(() => next);
-        })
-        .then(next => {
-            joined = true;
-            if (activeEl) activeEl.textContent = next;
-        })
-        .catch(() => { if (activeEl) activeEl.textContent = "1"; });
-
-    function leave() {
-        if (!joined) return;
-        joined = false;
-        fetch(`${API}/get/${ACTIVE_KEY}`, { keepalive: true })
-            .then(res => res.json())
-            .then(data => {
-                const current = parseInt(data.value, 10);
-                const next = Math.max(0, (isNaN(current) ? 1 : current) - 1);
-                fetch(`${API}/set/${ACTIVE_KEY}?value=${next}`, { keepalive: true });
-            })
-            .catch(() => {});
-    }
-
-    window.addEventListener("pagehide", leave);
-})();
 
 // ===============================
 // Back to top button
