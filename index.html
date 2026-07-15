@@ -212,13 +212,22 @@
     border-radius: 6px;
     cursor: pointer;
     text-decoration: none;
-    word-break: break-all;
+    white-space: nowrap;
   }
 
   .contact-item:hover, .contact-item:focus-visible {
     background: var(--panel-2);
     color: var(--pass);
   }
+
+  /* keep the email on a single line even on the narrowest sidebar width */
+  .contact-item.email {
+    font-size: 0.66rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .contact-item.email::-webkit-scrollbar { display: none; }
 
   .download-btn {
     font-family: 'JetBrains Mono', monospace;
@@ -929,7 +938,7 @@
     </ul>
 
     <div class="sidenav-contact">
-      <a class="contact-item" href="mailto:Jeffewing.imperial@gmail.com" id="copyEmail">📧 Jeffewing.imperial@gmail.com</a>
+      <a class="contact-item email" href="mailto:Jeffewing.imperial@gmail.com" id="copyEmail">📧 Jeffewing.imperial@gmail.com</a>
       <button class="contact-item" id="phoneTrigger" type="button">📞 0966-722-7598</button>
       <a class="contact-item" href="https://www.linkedin.com/in/jeff-imperial-415462185" target="_blank" rel="noopener">💼 LinkedIn</a>
       <a href="#" class="download-btn" id="downloadResume">⬇ Download Resume</a>
@@ -1372,18 +1381,39 @@ navButtons.forEach(btn => {
     });
 });
 
-const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const id = entry.target.id;
-            navButtons.forEach(btn => {
-                btn.classList.toggle("active", btn.dataset.target === id);
-            });
+function updateActiveNav() {
+    const viewportH = window.innerHeight;
+    const scrollY = window.scrollY;
+    const docH = document.documentElement.scrollHeight;
+
+    let currentId = navSections[0].id;
+
+    navSections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        // a section "takes over" once its top has crossed ~35% down the viewport
+        if (rect.top <= viewportH * 0.35) {
+            currentId = sec.id;
         }
     });
-}, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
 
-navSections.forEach(sec => navObserver.observe(sec));
+    // edge cases: force Home at the very top and Education at the very bottom,
+    // since those two sections don't always have enough room above/below them
+    // to trigger the check above on short pages.
+    if (scrollY < 40) {
+        currentId = navSections[0].id;
+    }
+    if (scrollY + viewportH >= docH - 4) {
+        currentId = navSections[navSections.length - 1].id;
+    }
+
+    navButtons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.target === currentId);
+    });
+}
+
+window.addEventListener("scroll", updateActiveNav, { passive: true });
+window.addEventListener("resize", updateActiveNav);
+updateActiveNav();
 
 // ===============================
 // Download Resume
