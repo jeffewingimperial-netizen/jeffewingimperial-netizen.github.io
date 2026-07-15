@@ -87,6 +87,8 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     z-index: 30;
     transition: transform 0.25s ease;
   }
@@ -338,6 +340,15 @@
   }
 
   .nav-overlay.open { display: block; }
+
+  /* while the mobile drawer is open, lock the page behind it so
+     scroll/touch gestures go to the drawer's own scroll area
+     instead of the page */
+  body.nav-open {
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+  }
 
   /* MAIN CONTENT */
   .content {
@@ -876,12 +887,24 @@
 
     .sidenav {
       transform: translateX(-100%);
-      width: 260px;
+      width: min(300px, 84vw);
+      /* top/bottom (set above) can get clipped by mobile browser
+         chrome that shows/hides on scroll (e.g. in-app browsers).
+         Pin an explicit, dynamic-viewport-aware height instead so
+         the drawer's bottom content is always reachable/scrollable. */
+      top: 0;
+      bottom: auto;
+      height: 100vh;
+      height: 100dvh;
       padding-top: 70px;
       box-shadow: 0 0 30px rgba(0,0,0,0.5);
     }
 
     .sidenav.open { transform: translateX(0); }
+
+    /* keep the floating back-to-top button from ever covering the
+       open drawer's contact links / download button */
+    body.nav-open .back-to-top { display: none; }
 
     .content {
       margin-left: 0;
@@ -1346,11 +1369,15 @@ function openSidenav() {
     sidenav.classList.add("open");
     navOverlay.classList.add("open");
     menuToggle.setAttribute("aria-expanded", "true");
+    // lock the background page so touch-scrolling inside the drawer
+    // doesn't get hijacked by the page behind it on mobile
+    document.body.classList.add("nav-open");
 }
 function closeSidenav() {
     sidenav.classList.remove("open");
     navOverlay.classList.remove("open");
     menuToggle.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("nav-open");
 }
 
 menuToggle.addEventListener("click", () => {
