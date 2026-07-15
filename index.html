@@ -17,9 +17,12 @@
     --pass: #4ADE80;
     --amber: #FBBF24;
     --rule: #1F2733;
+    --sidenav-w: 280px;
   }
 
   * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
 
   body {
     margin: 0;
@@ -51,11 +54,6 @@
     white-space: nowrap;
   }
 
-  .wrap {
-    position: relative;
-    z-index: 1;
-  }
-
   code, .mono { font-family: 'JetBrains Mono', monospace; }
 
   a { color: var(--pass); }
@@ -67,19 +65,287 @@
     }
   }
 
-  .wrap {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 40px 20px 80px;
+  /* ===============================
+     APP LAYOUT — landscape / side nav
+     =============================== */
+  .app {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: 100vh;
   }
 
-  /* TERMINAL WINDOW HEADER */
+  /* SIDEBAR */
+  .sidenav {
+    width: var(--sidenav-w);
+    flex-shrink: 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    background: var(--panel);
+    border-right: 1px solid var(--rule);
+    padding: 30px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 30;
+    transition: transform 0.25s ease;
+  }
+
+  .sidenav-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 2px solid var(--rule);
+    display: block;
+    margin: 0 auto 14px;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .sidenav-avatar:hover, .sidenav-avatar:focus-visible {
+    transform: scale(1.05);
+    border-color: var(--pass);
+  }
+
+  .sidenav h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-align: center;
+    margin: 0 0 6px;
+    letter-spacing: -0.3px;
+  }
+
+  .sidenav .role-line {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--amber);
+    font-size: 0.82rem;
+    text-align: center;
+    min-height: 1.4em;
+    margin-bottom: 6px;
+  }
+
+  .sidenav .role-line .cursor {
+    display: inline-block;
+    width: 7px;
+    background: var(--amber);
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .sidenav .location {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 22px;
+  }
+
+  /* NAV LINKS */
+  .nav-links {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .nav-links button {
+    all: unset;
+    box-sizing: border-box;
+    width: 100%;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+    padding: 10px 12px;
+    border-radius: 6px;
+    border-left: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .nav-links button:hover, .nav-links button:focus-visible {
+    background: var(--panel-2);
+    color: var(--text);
+  }
+
+  .nav-links button.active {
+    background: var(--panel-2);
+    color: var(--pass);
+    border-left-color: var(--pass);
+  }
+
+  .nav-links .nav-index {
+    color: var(--rule);
+    font-size: 0.72rem;
+  }
+
+  .nav-links button.active .nav-index { color: var(--pass); }
+
+  /* SIDEBAR CONTACT BLOCK */
+  .sidenav-contact {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contact-item {
+    all: unset;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    padding: 7px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    word-break: break-all;
+  }
+
+  .contact-item:hover, .contact-item:focus-visible {
+    background: var(--panel-2);
+    color: var(--pass);
+  }
+
+  .download-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    background: var(--panel-2);
+    color: var(--pass);
+    border: 1px solid var(--pass);
+    border-radius: 6px;
+    padding: 9px 12px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.2s ease, transform 0.15s ease;
+    margin-top: 6px;
+  }
+
+  .download-btn:hover, .download-btn:focus-visible {
+    background: var(--pass);
+    color: var(--bg);
+    transform: translateY(-1px);
+  }
+
+  /* SIDEBAR LIVE STATUS FOOTER */
+  .sidenav-stats {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .sidenav-stats .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 4px;
+  }
+
+  .sidenav-stats .stat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--pass);
+    flex-shrink: 0;
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(74,222,128,0); }
+  }
+
+  .sidenav-stats .stat-value { color: var(--text); font-weight: 600; }
+
+  /* MOBILE TOP BAR + TOGGLE */
+  .topbar {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--rule);
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    z-index: 25;
+  }
+
+  .menu-toggle {
+    all: unset;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    border-radius: 6px;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+  }
+
+  .menu-toggle span {
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: var(--pass);
+    border-radius: 2px;
+  }
+
+  .topbar .topbar-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text);
+  }
+
+  .nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 20;
+  }
+
+  .nav-overlay.open { display: block; }
+
+  /* MAIN CONTENT */
+  .content {
+    margin-left: var(--sidenav-w);
+    flex: 1;
+    min-width: 0;
+    padding: 44px 44px 90px;
+    max-width: 900px;
+  }
+
+  /* TERMINAL WINDOW HEADER (hero) */
   .terminal {
     background: var(--panel);
     border: 1px solid var(--rule);
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 28px;
+    margin-bottom: 12px;
   }
 
   .terminal-bar {
@@ -105,162 +371,37 @@
   }
 
   .terminal-body {
-    padding: 28px 26px 30px;
-  }
-
-  .profile-row {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: 4px;
-  }
-
-  .profile-pic {
-    width: 150px;
-    height: 150px;
-    border-radius: 14px;
-    object-fit: cover;
-    border: 2px solid var(--rule);
-    flex-shrink: 0;
-    cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-
-  .profile-pic:hover, .profile-pic:focus-visible {
-    transform: scale(1.05);
-    border-color: var(--pass);
-  }
-
-  /* LIGHTBOX */
-  .lightbox {
-    position: fixed;
-    inset: 0;
-    background: rgba(11, 15, 20, 0.92);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 20px;
-  }
-
-  .lightbox.open {
-    display: flex;
-    animation: fadeIn 0.2s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .lightbox img {
-    max-width: min(94vw, 1100px);
-    max-height: 88vh;
-    width: auto;
-    height: auto;
-    border-radius: 14px;
-    border: 2px solid var(--rule);
-    animation: zoomIn 0.25s ease;
-    image-rendering: auto;
-  }
-
-  @keyframes zoomIn {
-    from { transform: scale(0.85); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-
-  .lightbox-close {
-    position: absolute;
-    top: 22px;
-    right: 26px;
-    background: var(--panel);
-    border: 1px solid var(--rule);
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  .lightbox-close:hover, .lightbox-close:focus-visible {
-    border-color: var(--pass);
-    color: var(--pass);
+    padding: 24px 26px 28px;
   }
 
   .prompt {
     color: var(--pass);
     font-size: 0.85rem;
+    margin-bottom: 10px;
   }
 
   .prompt span { color: var(--muted); }
 
-  h1 {
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700;
-    font-size: clamp(1.6rem, 5vw, 2.1rem);
-    margin: 10px 0 4px;
-    letter-spacing: -0.5px;
-  }
-
-  .role-line {
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--amber);
-    font-size: 1rem;
-    min-height: 1.4em;
-    margin-bottom: 16px;
-  }
-
-  .role-line .cursor {
-    display: inline-block;
-    width: 8px;
-    background: var(--amber);
-    margin-left: 2px;
-    animation: blink 1s step-end infinite;
-  }
-
-  @keyframes blink { 50% { opacity: 0; } }
-
-  .contact {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    font-size: 0.85rem;
-    color: var(--muted);
-    align-items: center;
-  }
-
-  .download-btn {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    background: var(--panel-2);
-    color: var(--pass);
-    border: 1px solid var(--pass);
-    border-radius: 6px;
-    padding: 6px 12px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.2s ease, transform 0.15s ease;
-  }
-
-  .download-btn:hover, .download-btn:focus-visible {
-    background: var(--pass);
-    color: var(--bg);
-    transform: translateY(-1px);
-  }
-
-  .contact a { color: var(--text); text-decoration: none; }
-  .contact a:hover { color: var(--pass); }
-
   .summary {
-    margin-top: 18px;
-    padding-top: 18px;
-    border-top: 1px solid var(--rule);
     color: var(--text);
     font-size: 0.98rem;
+  }
+
+  .hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .hero-stats .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--pass);
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 6px 12px;
   }
 
   /* SECTION HEADERS */
@@ -272,6 +413,8 @@
     letter-spacing: 1.5px;
     margin: 40px 0 14px;
   }
+
+  section[id] { scroll-margin-top: 24px; }
 
   /* SKILLS ACCORDION (describe blocks) */
   .describe {
@@ -385,24 +528,6 @@
     padding: 5px;
     flex-shrink: 0;
   }
-
-  .company-badge {
-    width: 56px;
-    height: 56px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700;
-    font-size: 1.15rem;
-    flex-shrink: 0;
-    color: var(--bg);
-  }
-
-  .badge-transcosmos { background: var(--pass); }
-  .badge-finastra { background: var(--amber); }
-  .badge-accenture { background: #A78BFA; }
 
   /* EDUCATION */
   .edu-card {
@@ -546,9 +671,6 @@
     margin-top: 5px;
   }
 
-  @media (max-width: 480px) {
-    .project-shots { grid-template-columns: 1fr; }
-  }
   .reveal {
     opacity: 0;
     transform: translateY(16px);
@@ -560,59 +682,143 @@
     transform: translateY(0);
   }
 
-  /* FLOATING STATS WIDGET */
-  .floating-stats {
+  /* LIGHTBOX (profile / project image zoom) */
+  .lightbox {
     position: fixed;
-    bottom: 22px;
-    left: 22px;
-    z-index: 50;
+    inset: 0;
+    background: rgba(11, 15, 20, 0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+
+  .lightbox.open {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .lightbox img {
+    max-width: min(94vw, 1100px);
+    max-height: 88vh;
+    width: auto;
+    height: auto;
+    border-radius: 14px;
+    border: 2px solid var(--rule);
+    animation: zoomIn 0.25s ease;
+    image-rendering: auto;
+  }
+
+  @keyframes zoomIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 22px;
+    right: 26px;
     background: var(--panel);
     border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 10px 14px;
+    color: var(--text);
     font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .lightbox-close:hover, .lightbox-close:focus-visible {
+    border-color: var(--pass);
+    color: var(--pass);
+  }
+
+  /* CALL DIALOG (opens when phone is clicked) */
+  .call-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 15, 20, 0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+
+  .call-modal.open {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .call-modal .panel {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 22px 26px 26px;
+    max-width: 320px;
+    width: 100%;
+    text-align: center;
+    animation: zoomIn 0.25s ease;
+  }
+
+  .call-modal .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .modal-close {
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .modal-close:hover, .modal-close:focus-visible {
+    border-color: var(--pass);
+    color: var(--pass);
+  }
+
+  .call-modal .call-icon {
+    font-size: 2rem;
+    margin: 6px 0 8px;
+  }
+
+  .call-modal .phone-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.25rem;
+    color: var(--pass);
+    margin: 0 0 4px;
+  }
+
+  .call-modal .call-caption {
     font-size: 0.78rem;
     color: var(--muted);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-    backdrop-filter: blur(4px);
+    margin-bottom: 18px;
   }
 
-  .floating-stats .stat-row {
+  .call-modal .call-actions {
     display: flex;
-    align-items: center;
-    gap: 7px;
-    white-space: nowrap;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .floating-stats .stat-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--pass);
-    flex-shrink: 0;
-    animation: pulse-dot 1.8s ease-in-out infinite;
-  }
-
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
-    50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(74,222,128,0); }
-  }
-
-  .floating-stats .stat-value {
-    color: var(--text);
-    font-weight: 600;
-  }
-
-  @media (max-width: 480px) {
-    .floating-stats {
-      left: 12px;
-      bottom: 12px;
-      font-size: 0.7rem;
-      padding: 8px 10px;
-    }
+  .call-modal .call-actions .download-btn {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 0;
   }
 
   /* BACK TO TOP BUTTON */
@@ -655,7 +861,30 @@
     border-color: var(--pass);
   }
 
+  /* RESPONSIVE — collapse sidebar into off-canvas drawer */
+  @media (max-width: 900px) {
+    .topbar { display: flex; }
+
+    .sidenav {
+      transform: translateX(-100%);
+      width: 260px;
+      padding-top: 70px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    .sidenav.open { transform: translateX(0); }
+
+    .content {
+      margin-left: 0;
+      padding: 86px 20px 90px;
+    }
+  }
+
   @media (max-width: 480px) {
+    .project-shots { grid-template-columns: 1fr; }
+
+    .content { padding: 80px 16px 80px; }
+
     .back-to-top {
       right: 12px;
       bottom: 12px;
@@ -672,185 +901,242 @@
 
 <div class="bg-decor" id="bgDecor"></div>
 
-<div class="wrap">
+<!-- MOBILE TOP BAR -->
+<div class="topbar">
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <span class="topbar-title">Jeff Ewing A. Imperial</span>
+</div>
 
-  <div class="terminal">
-    <div class="terminal-bar">
-      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-      <span class="filename">My Portfolio</span>
+<div class="nav-overlay" id="navOverlay"></div>
+
+<div class="app">
+
+  <!-- SIDE NAVIGATION -->
+  <nav class="sidenav" id="sidenav">
+    <img src="jeff.jpg" alt="Jeff Ewing A. Imperial" class="sidenav-avatar" id="profile">
+    <h1>Jeff Ewing A. Imperial</h1>
+    <div class="role-line" id="typing"><span class="cursor">&nbsp;</span></div>
+    <div class="location">📍 Quezon City</div>
+
+    <ul class="nav-links">
+      <li><button type="button" data-target="home"><span class="nav-index">01</span> Home</button></li>
+      <li><button type="button" data-target="skills"><span class="nav-index">02</span> Skills</button></li>
+      <li><button type="button" data-target="projects"><span class="nav-index">03</span> Projects</button></li>
+      <li><button type="button" data-target="experience"><span class="nav-index">04</span> Experience</button></li>
+      <li><button type="button" data-target="education"><span class="nav-index">05</span> Education</button></li>
+    </ul>
+
+    <div class="sidenav-contact">
+      <a class="contact-item" href="mailto:Jeffewing.imperial@gmail.com" id="copyEmail">📧 Jeffewing.imperial@gmail.com</a>
+      <button class="contact-item" id="phoneTrigger" type="button">📞 0966-722-7598</button>
+      <a class="contact-item" href="https://www.linkedin.com/in/jeff-imperial-415462185" target="_blank" rel="noopener">💼 LinkedIn</a>
+      <a href="#" class="download-btn" id="downloadResume">⬇ Download Resume</a>
     </div>
-    <div class="terminal-body">
-      <div class="prompt"><span>$</span> whoami</div>
-      <div class="profile-row">
-        <img src="jeff.jpg" alt="Jeff Ewing A. Imperial" class="profile-pic" id="profile">
-        <div>
-          <h1>Jeff Ewing A. Imperial</h1>
-          <div class="role-line" id="typing"><span class="cursor">&nbsp;</span></div>
+
+    <div class="sidenav-stats">
+      <div class="stat-row"><span class="stat-dot"></span> Status: <span class="stat-value">Open to work</span></div>
+      <div class="stat-row">🗓 Since 2018 · <span class="stat-value">8+ yrs QA</span></div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+
+    <section id="home">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="filename">My Portfolio</span>
+        </div>
+        <div class="terminal-body">
+          <div class="prompt"><span>$</span> whoami</div>
+          <div class="summary">
+            QA Engineer with experience across manual and automated testing — from writing test cases
+            by hand to scripting them in Python and Selenium.
+          </div>
+          <div class="hero-stats">
+            <span class="chip">✓ Manual Testing</span>
+            <span class="chip">✓ Automation (Python/Selenium)</span>
+            <span class="chip">✓ 3 companies</span>
+            <span class="chip">✓ 8+ years</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="section-label">Skills</div>
+      <div id="skills-list"></div>
+    </section>
+
+    <section id="projects">
+      <div class="section-label">Recent Projects</div>
+
+      <div class="project-card">
+        <h3>Wacoal Website</h3>
+        <div class="project-desc">Performed manual testing, maintained the admin portal, and validated CRM functionalities, including user data management, CRUD operations, and data integrity.</div>
+        <div class="project-shots">
+          <figure>
+            <img src="Shopifyadmin.PNG" alt="Project One admin panel screenshot" onclick="openLightboxImg(this.src)">
+            <figcaption>Shopify Admin Panel</figcaption>
+          </figure>
+          <figure>
+            <img src="Shopifywebsite.PNG" alt="Project One website screenshot" onclick="openLightboxImg(this.src)">
+            <figcaption>Wacoal Store</figcaption>
+          </figure>
         </div>
       </div>
 
-      <div class="contact">
-        <span>📍 Quezon City</span>
-        <a href="mailto:Jeffewing.imperial@gmail.com" id="copyEmail">📧 Jeffewing.imperial@gmail.com</a>
-        <span>📞 0966-722-7598</span>
-        <a href="https://www.linkedin.com/in/jeff-imperial-415462185" target="_blank" rel="noopener">💼 LinkedIn</a>
-        <a href="#" class="download-btn" id="downloadResume">⬇ Download Resume</a>
+      <div class="project-card">
+        <h3>Suzuki Corpo</h3>
+        <div class="project-desc">Performed CRUD operations and content management on the admin site, conducted manual testing across the platform, and led client demonstrations of the finished build</div>
+        <div class="project-shots">
+          <figure>
+            <img src="Suzukicorpoadmin.PNG" alt="Project Two admin panel screenshot" onclick="openLightboxImg(this.src)">
+            <figcaption>CMS Admin Panel</figcaption>
+          </figure>
+          <figure>
+            <img src="Suzukicorpoweb1.PNG" alt="Project Two website screenshot" onclick="openLightboxImg(this.src)">
+            <figcaption>Suzuki Corporate Website</figcaption>
+          </figure>
+        </div>
       </div>
 
-      <div class="summary">
-        QA Engineer with experience across manual and automated testing — from writing test cases
-        by hand to scripting them in Python and Selenium.
+      <div class="project-card">
+        <h3>Suzuki Automobile</h3>
+        <div class="project-desc">Maintain monthly updates for the site  manual testing of new models, pricing, banners, and promos before release.</div>
+        <div class="project-shots">
+          <figure>
+            <img src="Suzukiadminmagento.PNG" alt="Project Three admin panel screenshot" onclick="openLightboxImg(this.src)">
+            <figcaption>Magento Admin Panel</figcaption>
+          </figure>
+          <figure>
+            <img src="Suzukiautowebsite.PNG" alt="Project Three website screenshot" onclick="openLightboxImg(this.src)">
+            <figcaption>Suzuki Automobile Website</figcaption>
+          </figure>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="section-label">Skills</div>
-
-  <div id="skills"></div>
-
-  <div class="section-label">Recent Projects</div>
-
-  <div class="project-card">
-    <h3>Wacoal Website</h3>
-    <div class="project-desc">Performed manual testing, maintained the admin portal, and validated CRM functionalities, including user data management, CRUD operations, and data integrity.</div>
-    <div class="project-shots">
-      <figure>
-        <img src="Shopifyadmin.PNG" alt="Project One admin panel screenshot" onclick="openLightboxImg(this.src)">
-        <figcaption>Shopify Admin Panel</figcaption>
-      </figure>
-      <figure>
-        <img src="Shopifywebsite.PNG" alt="Project One website screenshot" onclick="openLightboxImg(this.src)">
-        <figcaption>Wacoal Store</figcaption>
-      </figure>
-    </div>
-  </div>
-
-  <div class="project-card">
-    <h3>Suzuki Corpo</h3>
-    <div class="project-desc">Performed CRUD operations and content management on the admin site, conducted manual testing across the platform, and led client demonstrations of the finished build</div>
-    <div class="project-shots">
-      <figure>
-        <img src="Suzukicorpoadmin.PNG" alt="Project Two admin panel screenshot" onclick="openLightboxImg(this.src)">
-        <figcaption>CMS Admin Panel</figcaption>
-      </figure>
-      <figure>
-        <img src="Suzukicorpoweb1.PNG" alt="Project Two website screenshot" onclick="openLightboxImg(this.src)">
-        <figcaption>Suzuki Corporate Website</figcaption>
-      </figure>
-    </div>
-  </div>
-
-  <div class="project-card">
-    <h3>Suzuki Automobile</h3>
-    <div class="project-desc">Maintain monthly updates for the site  manual testing of new models, pricing, banners, and promos before release.</div>
-    <div class="project-shots">
-      <figure>
-        <img src="Suzukiadminmagento.PNG" alt="Project Three admin panel screenshot" onclick="openLightboxImg(this.src)">
-        <figcaption>Magento Admin Panel</figcaption>
-      </figure>
-      <figure>
-        <img src="Suzukiautowebsite.PNG" alt="Project Three website screenshot" onclick="openLightboxImg(this.src)">
-        <figcaption>Suzuki Automobile Website</figcaption>
-      </figure>
-    </div>
-  </div>
-
-
-  <div class="project-card">
-    <h3>Suzuki Bankloan</h3>
-    <div class="project-desc">Tested and maintained bank financing workflows, including payment terms, down payment calculations, total amount computation, loan application status, and partner bank integrations to ensure accurate and reliable transactions.</div>
-    <div class="project-shots">
-      <figure>
-        <img src="BankloanAdmin.PNG" alt="Project Three admin panel screenshot" onclick="openLightboxImg(this.src)">
-        <figcaption>CMS Admin Panel</figcaption>
-      </figure>
-      <figure>
-        <img src="SuzukiAutoweb.PNG" alt="Project Three website screenshot" onclick="openLightboxImg(this.src)">
-        <figcaption>Suzuki Automobile Website</figcaption>
-      </figure>
-    </div>
-  </div>
-
-  <div class="section-label">Experience</div>
-
-  <div class="test-case current">
-    <div class="test-case-head">
-      <div class="test-case-title">
-        <img src="Tcap.jpeg" alt="Transcosmos logo" class="company-logo">
-        <h3>Software Test Engineer</h3>
+      <div class="project-card">
+        <h3>Suzuki Bankloan</h3>
+        <div class="project-desc">Tested and maintained bank financing workflows, including payment terms, down payment calculations, total amount computation, loan application status, and partner bank integrations to ensure accurate and reliable transactions.</div>
+        <div class="project-shots">
+          <figure>
+            <img src="BankloanAdmin.PNG" alt="Project Three admin panel screenshot" onclick="openLightboxImg(this.src)">
+            <figcaption>CMS Admin Panel</figcaption>
+          </figure>
+          <figure>
+            <img src="SuzukiAutoweb.PNG" alt="Project Three website screenshot" onclick="openLightboxImg(this.src)">
+            <figcaption>Suzuki Automobile Website</figcaption>
+          </figure>
+        </div>
       </div>
-      <span class="status">● running</span>
-    </div>
-    <div class="company">Transcosmos Asia Philippines</div>
-    <div class="duration">Jan 27, 2020 — Present · SDLC: Agile</div>
-    <ul>
-      <li>Designed and executed test cases for both frontend and backend systems</li>
-      <li>Managed bug tracking, test reporting, and acceptance criteria using JIRA</li>
-      <li>Developed user manuals and wireframes</li>
-      <li>Performed mobile testing via BrowserStack across multiple devices and resolutions</li>
-      <li>Handled CRUD operations, content population, and testing for CMS platforms like Magento, WordPress, Laravel & Shopify Admin</li>
-      <li>Covered regression, smoke, negative, performance, and user testing</li>
-    </ul>
-  </div>
+    </section>
 
-  <div class="test-case">
-    <div class="test-case-head">
-      <div class="test-case-title">
-        <img src="Finastra.webp" alt="Finastra logo" class="company-logo">
-        <h3>Automation Quality Engineer</h3>
+    <section id="experience">
+      <div class="section-label">Experience</div>
+
+      <div class="test-case current">
+        <div class="test-case-head">
+          <div class="test-case-title">
+            <img src="Tcap.jpeg" alt="Transcosmos logo" class="company-logo">
+            <h3>Software Test Engineer</h3>
+          </div>
+          <span class="status">● running</span>
+        </div>
+        <div class="company">Transcosmos Asia Philippines</div>
+        <div class="duration">Jan 27, 2020 — Present · SDLC: Agile</div>
+        <ul>
+          <li>Designed and executed test cases for both frontend and backend systems</li>
+          <li>Managed bug tracking, test reporting, and acceptance criteria using JIRA</li>
+          <li>Developed user manuals and wireframes</li>
+          <li>Performed mobile testing via BrowserStack across multiple devices and resolutions</li>
+          <li>Handled CRUD operations, content population, and testing for CMS platforms like Magento, WordPress, Laravel & Shopify Admin</li>
+          <li>Covered regression, smoke, negative, performance, and user testing</li>
+        </ul>
       </div>
-      <span class="status">✓ passed</span>
-    </div>
-    <div class="company">Finastra</div>
-    <div class="duration">Apr 2019 — Dec 2019 · SDLC: Agile</div>
-    <ul>
-      <li>Developed and executed automation test scripts using Python and Selenium IDE</li>
-      <li>Used HP ALM to run test cases, monitor progress, and manage defect reporting</li>
-      <li>Used Jenkins for CI/CD integration and automated testing workflows</li>
-      <li>Managed source code with Bitbucket and Git — push, pull, and branch management</li>
-    </ul>
-  </div>
 
-  <div class="test-case">
-    <div class="test-case-head">
-      <div class="test-case-title">
-        <img src="Acn.png" alt="Accenture logo" class="company-logo">
-        <h3>Quality Assurance Engineer</h3>
+      <div class="test-case">
+        <div class="test-case-head">
+          <div class="test-case-title">
+            <img src="Finastra.webp" alt="Finastra logo" class="company-logo">
+            <h3>Automation Quality Engineer</h3>
+          </div>
+          <span class="status">✓ passed</span>
+        </div>
+        <div class="company">Finastra</div>
+        <div class="duration">Apr 2019 — Dec 2019 · SDLC: Agile</div>
+        <ul>
+          <li>Developed and executed automation test scripts using Python and Selenium IDE</li>
+          <li>Used HP ALM to run test cases, monitor progress, and manage defect reporting</li>
+          <li>Used Jenkins for CI/CD integration and automated testing workflows</li>
+          <li>Managed source code with Bitbucket and Git — push, pull, and branch management</li>
+        </ul>
       </div>
-      <span class="status">✓ passed</span>
-    </div>
-    <div class="company">Accenture Inc.</div>
-    <div class="duration">Jan 2018 — Mar 2019 · SDLC: Scrum & Waterfall</div>
-    <ul>
-      <li>Performed manual testing for frontend and backend functionality</li>
-      <li>Created detailed test cases using HP ALM, user stories, scope, and limitations</li>
-      <li>Evaluated and replicated issues with clear severity classification (Low, Medium, High)</li>
-    </ul>
-  </div>
 
-  <div class="section-label">Education</div>
+      <div class="test-case">
+        <div class="test-case-head">
+          <div class="test-case-title">
+            <img src="Acn.png" alt="Accenture logo" class="company-logo">
+            <h3>Quality Assurance Engineer</h3>
+          </div>
+          <span class="status">✓ passed</span>
+        </div>
+        <div class="company">Accenture Inc.</div>
+        <div class="duration">Jan 2018 — Mar 2019 · SDLC: Scrum & Waterfall</div>
+        <ul>
+          <li>Performed manual testing for frontend and backend functionality</li>
+          <li>Created detailed test cases using HP ALM, user stories, scope, and limitations</li>
+          <li>Evaluated and replicated issues with clear severity classification (Low, Medium, High)</li>
+        </ul>
+      </div>
+    </section>
 
-  <div class="edu-card">
-    <img src="sti.webp" alt="STI College logo" class="edu-logo">
-    <div>
-      <h3>Bachelor of Science in Computer Science</h3>
-      <div class="school">STI College Novaliches</div>
-      <div class="school">Graduated May 2017</div>
-    </div>
-  </div>
+    <section id="education">
+      <div class="section-label">Education</div>
 
-  <div class="suite-summary">
-    Test Suites: 3 passed, 3 total
-    <div class="muted-line">Ran in 8y 0mo · 2018 – Present</div>
-  </div>
+      <div class="edu-card">
+        <img src="sti.webp" alt="STI College logo" class="edu-logo">
+        <div>
+          <h3>Bachelor of Science in Computer Science</h3>
+          <div class="school">STI College Novaliches</div>
+          <div class="school">Graduated May 2017</div>
+        </div>
+      </div>
 
+      <div class="suite-summary">
+        Test Suites: 3 passed, 3 total
+        <div class="muted-line">Ran in 8y 0mo · 2018 – Present</div>
+      </div>
+    </section>
+
+  </main>
 </div>
 
+<!-- PROFILE / PROJECT IMAGE LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" id="lightboxClose">✕ Close</button>
   <img src="jeff.jpg" alt="Jeff Ewing A. Imperial — zoomed" id="lightboxImg">
 </div>
 
+<!-- CALL DIALOG -->
+<div class="call-modal" id="callModal">
+  <div class="panel">
+    <div class="panel-head">
+      <div class="prompt" style="margin:0;"><span>$</span> call --contact</div>
+      <button class="modal-close" id="callModalClose" type="button">✕</button>
+    </div>
+    <div class="call-icon">📞</div>
+    <div class="phone-number">0966-722-7598</div>
+    <div class="call-caption">Reach Jeff directly by phone</div>
+    <div class="call-actions">
+      <a class="download-btn" href="tel:+639667227598">📱 Call Now</a>
+      <button class="download-btn" id="copyPhone" type="button">📋 Copy Number</button>
+    </div>
+  </div>
+</div>
 
 <button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">↑ Back to Top</button>
 
@@ -872,14 +1158,12 @@ const decorItems = [
 ];
 
 const bgDecor = document.getElementById("bgDecor");
-if (bgDecor && window.innerWidth > 1000) {
+if (bgDecor && window.innerWidth > 1300) {
     decorItems.forEach((txt, i) => {
         const el = document.createElement("span");
         el.textContent = txt;
-        const onLeft = i % 2 === 0;
         el.style.top = (8 + i * 9) + "%";
-        el.style.left = onLeft ? (2 + (i % 3) * 3) + "%" : "";
-        el.style.right = !onLeft ? (2 + (i % 3) * 3) + "%" : "";
+        el.style.right = (2 + (i % 3) * 3) + "%";
         bgDecor.appendChild(el);
     });
 }
@@ -943,7 +1227,7 @@ const skillGroups = [
     { name: "AI-Assisted Development", items: ["Built this resume site with AI-assisted coding", "HTML/CSS/JS prototyping via AI pair-programming", "Rapid tool prototyping with AI code generation", "Debugging & refining AI-generated code for production"] }
 ];
 
-const skillsContainer = document.getElementById("skills");
+const skillsContainer = document.getElementById("skills-list");
 
 skillGroups.forEach((group, i) => {
     const block = document.createElement("div");
@@ -982,7 +1266,6 @@ skillGroups.forEach((group, i) => {
 const profilePic = document.getElementById("profile");
 const lightbox = document.getElementById("lightbox");
 const lightboxClose = document.getElementById("lightboxClose");
-
 const lightboxImgEl = document.getElementById("lightboxImg");
 
 function openLightbox() {
@@ -1002,11 +1285,105 @@ if (profilePic) {
 }
 lightboxClose.addEventListener("click", closeLightbox);
 lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) closeLightbox(); // click outside image closes it
+    if (e.target === lightbox) closeLightbox();
 });
+
+// ===============================
+// Call dialog (opens when the phone number is clicked)
+// ===============================
+const phoneTrigger = document.getElementById("phoneTrigger");
+const callModal = document.getElementById("callModal");
+const callModalClose = document.getElementById("callModalClose");
+const copyPhoneBtn = document.getElementById("copyPhone");
+
+function openCallModal() {
+    callModal.classList.add("open");
+}
+function closeCallModal() {
+    callModal.classList.remove("open");
+}
+
+phoneTrigger.addEventListener("click", openCallModal);
+callModalClose.addEventListener("click", closeCallModal);
+callModal.addEventListener("click", (e) => {
+    if (e.target === callModal) closeCallModal();
+});
+
+if (copyPhoneBtn) {
+    copyPhoneBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText("0966-722-7598");
+        const original = copyPhoneBtn.innerHTML;
+        copyPhoneBtn.innerHTML = "✔ Copied!";
+        setTimeout(() => { copyPhoneBtn.innerHTML = original; }, 1800);
+    });
+}
+
 document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeLightbox();
+    if (e.key === "Escape") {
+        closeLightbox();
+        closeCallModal();
+        closeSidenav();
+    }
 });
+
+// ===============================
+// Mobile side navigation (off-canvas drawer)
+// ===============================
+const menuToggle = document.getElementById("menuToggle");
+const sidenav = document.getElementById("sidenav");
+const navOverlay = document.getElementById("navOverlay");
+
+function openSidenav() {
+    sidenav.classList.add("open");
+    navOverlay.classList.add("open");
+    menuToggle.setAttribute("aria-expanded", "true");
+}
+function closeSidenav() {
+    sidenav.classList.remove("open");
+    navOverlay.classList.remove("open");
+    menuToggle.setAttribute("aria-expanded", "false");
+}
+
+menuToggle.addEventListener("click", () => {
+    if (sidenav.classList.contains("open")) {
+        closeSidenav();
+    } else {
+        openSidenav();
+    }
+});
+navOverlay.addEventListener("click", closeSidenav);
+
+// ===============================
+// Section navigation — click a nav link, jump to that section
+// (Skills -> lands on Skills section, Projects -> Projects section, etc.)
+// ===============================
+const navButtons = document.querySelectorAll(".nav-links button");
+const navSections = ["home", "skills", "projects", "experience", "education"]
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const target = document.getElementById(btn.dataset.target);
+        if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        if (window.innerWidth <= 900) closeSidenav();
+    });
+});
+
+const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const id = entry.target.id;
+            navButtons.forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.target === id);
+            });
+        }
+    });
+}, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
+
+navSections.forEach(sec => navObserver.observe(sec));
 
 // ===============================
 // Download Resume
@@ -1025,7 +1402,7 @@ if (downloadBtn) {
 // ===============================
 // Scroll reveal for sections
 // ===============================
-const revealTargets = document.querySelectorAll(".section-label, #skills .describe, .test-case, .edu-card, .suite-summary");
+const revealTargets = document.querySelectorAll(".section-label, #skills-list .describe, .test-case, .edu-card, .suite-summary, .project-card");
 revealTargets.forEach(el => el.classList.add("reveal"));
 
 const revealObserver = new IntersectionObserver((entries) => {
@@ -1049,7 +1426,6 @@ if (copyBtn) {
         setTimeout(() => { copyBtn.innerHTML = original; }, 1800);
     });
 }
-
 
 // ===============================
 // Back to top button
